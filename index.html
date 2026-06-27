@@ -271,6 +271,78 @@
     .nmtrack{animation:none!important;}
     .hero::before{transform:none!important;}
   }
+  /* ── cover letter generator ─────────────────────────────────────── */
+  .cl-overlay{position:fixed;inset:0;z-index:200;display:none;align-items:flex-start;justify-content:center;
+    padding:5vh 18px;overflow-y:auto;background:rgba(8,11,18,.55);
+    backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);}
+  body.cl-open{overflow:hidden;}
+  body.cl-open .cl-overlay{display:flex;}
+  .cl-card,.cl-letterwrap{opacity:0;transform:translateY(16px) scale(.985);}
+  body.cl-open .cl-card,body.cl-open .cl-letterwrap{opacity:1;transform:none;
+    transition:opacity .38s ease,transform .42s cubic-bezier(.2,.7,.2,1);}
+
+  .cl-card{width:100%;max-width:480px;background:var(--surface);border:1px solid var(--line);
+    border-radius:18px;padding:30px 30px 26px;box-shadow:0 34px 80px -30px var(--shadow);}
+  .cl-card h3{font-family:var(--display);font-size:1.5rem;line-height:1.12;margin:0 0 6px;color:var(--ink);}
+  .cl-card .cl-sub{font-family:var(--sans);font-size:.92rem;color:var(--muted);margin:0 0 22px;line-height:1.5;}
+  .cl-field{margin:0 0 16px;}
+  .cl-field label{display:block;font-family:var(--mono);font-size:.68rem;letter-spacing:.07em;
+    text-transform:uppercase;color:var(--faint);margin-bottom:6px;}
+  .cl-field label .req{color:#e5484d;}
+  .cl-field input,.cl-field textarea{width:100%;font-family:var(--sans);font-size:.95rem;color:var(--ink);
+    background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:11px 13px;
+    transition:border-color .2s ease,box-shadow .2s ease;}
+  .cl-field input::placeholder,.cl-field textarea::placeholder{color:var(--faint);}
+  .cl-field input:focus,.cl-field textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
+  .cl-field textarea{resize:vertical;min-height:60px;line-height:1.5;}
+  .cl-formact{display:flex;align-items:center;gap:10px;margin-top:24px;}
+  .cl-formact .spacer{flex:1;}
+  .cl-card .btn,.cl-bar .btn{cursor:pointer;}
+  .cl-card .btn[disabled]{opacity:.42;cursor:not-allowed;}
+  .cl-card .btn[disabled]:hover{transform:none;box-shadow:none;background:var(--accent);border-color:var(--accent);}
+
+  /* the letter is always a light "paper" — it's a document */
+  .cl-letterwrap{width:100%;max-width:720px;}
+  .cl-bar{display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap;}
+  .cl-bar .spacer{flex:1;}
+  .cl-letter{background:#fff;color:#1f1f1f;border-radius:7px;box-shadow:0 34px 80px -32px rgba(0,0,0,.65);
+    padding:54px 56px;font-family:var(--display);font-size:.95rem;line-height:1.7;}
+  .cl-letter .cl-top{display:flex;justify-content:space-between;align-items:flex-end;
+    border-bottom:2px solid #2563c9;padding-bottom:12px;margin-bottom:18px;gap:16px;}
+  .cl-letter .cl-name{font-size:1.7rem;font-weight:700;letter-spacing:-.01em;line-height:1.05;}
+  .cl-letter .cl-rl{font-size:.78rem;color:#555;margin-top:4px;}
+  .cl-letter .cl-contact{font-size:.72rem;color:#555;text-align:right;line-height:1.7;white-space:nowrap;}
+  .cl-letter .cl-contact a{color:#2563c9;text-decoration:none;}
+  .cl-letter .cl-date{font-size:.8rem;color:#555;margin:0 0 4px;}
+  .cl-letter .cl-addr{margin:0 0 20px;font-size:.86rem;}
+  .cl-letter .cl-addr b{font-weight:700;}
+  .cl-letter p{margin:0 0 13px;}
+  .cl-letter strong{font-weight:700;}
+  .cl-letter .cl-sign{margin-top:22px;}
+  .cl-letter .cl-sign b{font-weight:700;font-size:1.02rem;}
+
+  .cl-toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(20px);opacity:0;
+    background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:.78rem;padding:10px 18px;
+    border-radius:999px;z-index:300;transition:opacity .25s ease,transform .25s ease;pointer-events:none;}
+  .cl-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  @media(max-width:560px){
+    .cl-letter{padding:34px 26px;}
+    .cl-letter .cl-top{flex-direction:column;align-items:flex-start;gap:10px;}
+    .cl-letter .cl-contact{text-align:left;white-space:normal;}
+  }
+  @media print{
+    body.cl-open > header,
+    body.cl-open main > *:not(.cl-overlay),
+    body.cl-open .cl-card,
+    body.cl-open .cl-bar{display:none!important;}
+    body.cl-open main{display:block;}
+    body.cl-open .cl-overlay{position:static;display:block;overflow:visible;padding:0;
+      background:#fff;backdrop-filter:none;-webkit-backdrop-filter:none;}
+    body.cl-open .cl-letterwrap{max-width:none;opacity:1!important;transform:none!important;}
+    body.cl-open .cl-letter{box-shadow:none;border-radius:0;padding:0;color:#1f1f1f;background:#fff;}
+    @page{size:A4;margin:15mm 14mm;}
+  }
 </style>
 </head>
 <body>
@@ -282,11 +354,12 @@
     <span class="brand">Vaibhav Saxena</span>
     <div class="navright">
       <nav class="navlinks">
-        <a href="#work">Work</a>
         <a href="#path">Path</a>
+        <a href="#work">Work</a>
         <a href="#skills">Skills</a>
         <a href="#awards">Awards</a>
         <a class="pdf" href="Vaibhav_Saxena_SDE.pdf" target="_blank" rel="noopener">Resume&nbsp;PDF</a>
+        <a class="pdf" href="#cover" data-cl-open>Cover&nbsp;letter</a>
       </nav>
       <button class="themebtn" id="theme" type="button" aria-label="Toggle dark mode" title="Toggle light / dark">
         <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>
@@ -307,6 +380,7 @@
       </div>
       <div class="actions">
         <a class="btn primary" id="magnet" href="Vaibhav_Saxena_SDE.pdf" target="_blank" rel="noopener">Download resume ↓</a>
+        <button class="btn" type="button" data-cl-open>Cover letter ✦</button>
         <a class="btn" href="mailto:vaibhav.saxena022@gmail.com">Email</a>
         <a class="btn" href="https://github.com/vaibhavsaxena022" target="_blank" rel="noopener">GitHub</a>
         <a class="btn" href="https://linkedin.com/in/vaibhav-saxena22" target="_blank" rel="noopener">LinkedIn</a>
@@ -495,6 +569,48 @@
       </div>
     </div>
   </footer>
+
+  <div class="cl-overlay" id="clOverlay" role="dialog" aria-modal="true" aria-label="Generate a tailored cover letter">
+    <div class="cl-card" id="clForm">
+      <h3>Tailored cover letter</h3>
+      <p class="cl-sub">Add a couple of details about the role and I'll personalize a letter for you — instantly, right here.</p>
+      <form id="clFormEl" novalidate>
+        <div class="cl-field">
+          <label for="clCompany">Company <span class="req">*</span></label>
+          <input id="clCompany" type="text" autocomplete="organization" placeholder="e.g. Acme Inc." required>
+        </div>
+        <div class="cl-field">
+          <label for="clRole">Role you're hiring for <span class="req">*</span></label>
+          <input id="clRole" type="text" placeholder="e.g. Senior Backend Engineer" required>
+        </div>
+        <div class="cl-field">
+          <label for="clManager">Hiring manager's name (optional)</label>
+          <input id="clManager" type="text" placeholder="e.g. Priya Sharma">
+        </div>
+        <div class="cl-field">
+          <label for="clNote">Anything specific about the role? (optional)</label>
+          <textarea id="clNote" placeholder="A line about the team, product, or mission — I'll weave it in."></textarea>
+        </div>
+        <div class="cl-formact">
+          <button class="btn primary" type="submit" id="clGen" disabled>Generate letter →</button>
+          <span class="spacer"></span>
+          <button class="btn" type="button" data-cl-close>Cancel</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="cl-letterwrap" id="clView" hidden>
+      <div class="cl-bar">
+        <button class="btn" type="button" id="clBack">← Edit details</button>
+        <span class="spacer"></span>
+        <button class="btn" type="button" id="clCopy">Copy text</button>
+        <button class="btn" type="button" id="clPrint">Print / Save</button>
+        <button class="btn primary" type="button" data-cl-close>Done</button>
+      </div>
+      <div class="cl-letter" id="clLetter"></div>
+    </div>
+  </div>
+  <div class="cl-toast" id="clToast" role="status" aria-live="polite"></div>
 </main>
 
 <script>
@@ -566,12 +682,18 @@
 
   /* scroll-spy active nav */
   (function(){
-    var links={};document.querySelectorAll('.navlinks a[href^="#"]').forEach(function(a){links[a.getAttribute('href').slice(1)]=a;});
-    var secs=document.querySelectorAll('section[id]');
-    if(!('IntersectionObserver'in window))return;
-    var io=new IntersectionObserver(function(en){en.forEach(function(x){var l=links[x.target.id];if(!l)return;
-      if(x.isIntersecting){Object.keys(links).forEach(function(k){links[k].classList.remove('active');});l.classList.add('active');}});},{rootMargin:'-45% 0px -50% 0px'});
-    secs.forEach(function(s){io.observe(s);});
+    var links={};document.querySelectorAll('.navlinks a[href^="#"]').forEach(function(a){
+      var id=a.getAttribute('href').slice(1); if(document.getElementById(id)) links[id]=a;});
+    var ids=Object.keys(links); if(!ids.length) return;
+    var upd=function(){
+      var mid=innerHeight*0.4, cur=null;
+      ids.forEach(function(id){
+        var r=document.getElementById(id).getBoundingClientRect();
+        if(r.top<=mid && r.bottom>=mid) cur=id;
+      });
+      ids.forEach(function(id){ links[id].classList.toggle('active', id===cur); });
+    };
+    addEventListener('scroll',upd,{passive:true}); addEventListener('resize',upd); upd();
   })();
 
   /* magnetic primary button */
@@ -655,6 +777,101 @@
       pts.forEach(function(p,i){p.classList.toggle('on',prog>=(i+0.4)/pts.length);});
     };
     addEventListener('scroll',upd,{passive:true});addEventListener('resize',upd);upd();
+  })();
+
+  /* cover letter generator */
+  (function(){
+    var overlay=document.getElementById('clOverlay'); if(!overlay) return;
+    var form=document.getElementById('clForm'), view=document.getElementById('clView');
+    var formEl=document.getElementById('clFormEl'), letter=document.getElementById('clLetter');
+    var toast=document.getElementById('clToast'), lastFocus=null;
+
+    function esc(s){return (s||'').replace(/[&<>"]/g,function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+    function flash(msg){ toast.textContent=msg; toast.classList.add('show');
+      clearTimeout(flash._t); flash._t=setTimeout(function(){toast.classList.remove('show');},1900); }
+    function showForm(){ view.hidden=true; form.hidden=false; }
+    function showView(){ form.hidden=true; view.hidden=false; overlay.scrollTop=0; }
+    function open(){ lastFocus=document.activeElement; document.body.classList.add('cl-open'); showForm(); syncGen();
+      setTimeout(function(){var c=document.getElementById('clCompany'); if(c)c.focus();},80); }
+
+    var genBtn=document.getElementById('clGen');
+    var fCo=document.getElementById('clCompany'), fRl=document.getElementById('clRole');
+    function syncGen(){ genBtn.disabled=!(fCo.value.trim() && fRl.value.trim()); }
+    fCo.addEventListener('input',syncGen); fRl.addEventListener('input',syncGen);
+    function close(){ document.body.classList.remove('cl-open'); if(lastFocus&&lastFocus.focus)lastFocus.focus(); }
+
+    function build(d){
+      var date=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+      var co=esc(d.company), role=esc(d.role), mgr=esc(d.manager.trim()), note=esc(d.note.trim());
+      var greet = mgr ? 'Dear '+mgr+',' : 'Dear Hiring Team,';
+      var addr  = mgr ? '<b>'+mgr+'</b><br>'+co : '<b>'+co+'</b>';
+      var reason = note
+        ? 'I’m especially drawn to '+co+' — '+note+' — and I’d bring that same end-to-end ownership to your team.'
+        : 'I’m drawn to '+co+' and the kind of problems your team is solving, and I’d bring that same end-to-end ownership to your team.';
+      letter.innerHTML =
+        '<div class="cl-top"><div><div class="cl-name">Vaibhav Saxena</div>'+
+        '<div class="cl-rl">Software Development Engineer — Backend</div></div>'+
+        '<div class="cl-contact">Bengaluru, India<br>(+91) 967-254-9888<br>'+
+        '<a href="mailto:vaibhav.saxena022@gmail.com">vaibhav.saxena022@gmail.com</a><br>'+
+        '<a href="https://vaibhavsaxena022.github.io/cv/">vaibhavsaxena022.github.io/cv</a></div></div>'+
+        '<p class="cl-date">'+date+'</p>'+
+        '<div class="cl-addr">'+addr+'</div>'+
+        '<p>'+greet+'</p>'+
+        '<p>I’m writing to apply for the <strong>'+role+'</strong> position at <strong>'+co+'</strong>. '+
+        'For the past four years at Outleap Technologies (LeapScholar / GeeBee), I’ve owned business-critical '+
+        'backend systems end to end on a high-traffic study-abroad platform — from designing the services to '+
+        'shipping them and keeping them reliable in production. '+reason+'</p>'+
+        '<p>Most of my work has been deep backend ownership in Java and Spring Boot, with Kotlin and Python '+
+        'alongside. I designed and shipped a <strong>partner commission &amp; billing engine</strong> that owns '+
+        'the full payout lifecycle across universities, the company, and channel partners — invoices, purchase '+
+        'orders, reversals, and auditable settlements — and a <strong>CAS/AIP conditional-offer and pre-visa '+
+        'workflow engine</strong> that cut manual partner processing by 70–80%. When the platform needed '+
+        'scalable background processing, I built our <strong>asynchronous job framework from the ground up</strong> '+
+        '(Python + AWS SQS) — a layered executor model with rate limiting and config-driven fallback that now '+
+        'powers our AI and batch workloads platform-wide.</p>'+
+        '<p>What sets me apart is a quality-first foundation: I started as an SDET and built our entire '+
+        '<strong>hybrid automation framework from scratch</strong> (Selenium, REST Assured, TestNG, with CI/CD '+
+        'on Jenkins), cutting post-release defects by roughly 80%. That background means I don’t treat testing '+
+        'as someone else’s problem — I own reliability, observability, and the edge cases before they reach '+
+        'production. More recently I’ve standardized <strong>AI-assisted development workflows</strong> across '+
+        'our backend services and contributed to a production GenAI service, so I’m comfortable shipping in an '+
+        'AI-accelerated codebase.</p>'+
+        '<p>I’d welcome the chance to talk about how I can contribute to '+co+'. Thank you for your time and '+
+        'consideration.</p>'+
+        '<div class="cl-sign"><p>Sincerely,</p><p><b>Vaibhav Saxena</b></p></div>';
+    }
+
+    formEl.addEventListener('submit',function(e){
+      e.preventDefault();
+      var d={ company:document.getElementById('clCompany').value.trim(),
+              role:document.getElementById('clRole').value.trim(),
+              manager:document.getElementById('clManager').value,
+              note:document.getElementById('clNote').value };
+      if(!d.company||!d.role){ flash('Company and role are required'); return; }
+      build(d); showView();
+    });
+
+    document.getElementById('clBack').addEventListener('click',showForm);
+    var savedTitle=null;
+    document.getElementById('clPrint').addEventListener('click',function(){
+      savedTitle=document.title; document.title='Vaibhav Saxena — SDE Cover Letter'; window.print(); });
+    window.addEventListener('afterprint',function(){
+      if(savedTitle!==null){ document.title=savedTitle; savedTitle=null; } });
+    document.getElementById('clCopy').addEventListener('click',function(){
+      var txt=letter.innerText.replace(/\n{3,}/g,'\n\n').trim();
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(function(){flash('Cover letter copied');},function(){flash('Copy failed');});
+      } else { flash('Copy not supported'); }
+    });
+
+    [].forEach.call(document.querySelectorAll('[data-cl-open]'),function(b){
+      b.addEventListener('click',function(e){e.preventDefault();open();}); });
+    [].forEach.call(document.querySelectorAll('[data-cl-close]'),function(b){
+      b.addEventListener('click',close); });
+    overlay.addEventListener('click',function(e){ if(e.target===overlay) close(); });
+    document.addEventListener('keydown',function(e){
+      if(e.key==='Escape'&&document.body.classList.contains('cl-open')) close(); });
   })();
 </script>
 </body>
